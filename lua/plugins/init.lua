@@ -130,6 +130,7 @@ return {
 			"hrsh7th/cmp-nvim-lua",
 			"rafamadriz/friendly-snippets",
 			"L3MON4D3/LuaSnip",
+      "folke/neoconf.nvim",
 		},
 		branch = "v3.x",
 		config = function()
@@ -248,6 +249,10 @@ return {
 	},
 	{
 		"folke/which-key.nvim",
+    event = "VeryLazy",
+    config = function ()
+			require("plugins.which-key")
+    end
 	},
 	-- enhance open file from terminal
 	{
@@ -324,5 +329,6 @@ return {
       }
       require("gp").setup(conf)
     end,
-  }
+  },
+
 }
