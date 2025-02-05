@@ -6,6 +6,22 @@ lsp_zero.on_attach(
   end
 )
 
+lsp_zero.extend_lspconfig({
+  capabilities = require("cmp_nvim_lsp").default_capabilities(),
+})
+
+local metals_config = require("metals").bare_config()
+metals_config.capabilities = lsp_zero.get_capabilities()
+
+local metals_augroup = vim.api.nvim_create_augroup('nvim-metals',{clear=true})
+vim.api.nvim_create_autocmd('FileType',{
+  group = metals_augroup,
+  pattern = {'scala', 'sbt', 'java'},
+  callback = function ()
+    require('metals').initialize_or_attach(metals_config)
+  end
+})
+
 require('mason').setup({})
 require('mason-lspconfig').setup({
   ensure_installed = {},

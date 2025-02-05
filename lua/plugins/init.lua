@@ -262,4 +262,67 @@ return {
 			require("perfanno").setup({})
 		end,
 	},
+  {
+    "smjonas/inc-rename.nvim",
+    config = function()
+      require("inc_rename").setup()
+    end,
+  },
+  {
+    "scalameta/nvim-metals",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    ft = { "scala", "sbt", "java" },
+    opts = function()
+      local metals_config = require("metals").bare_config()
+        metals_config.on_attach = function(client, bufnr)
+        -- your on_attach function
+      end
+
+      return metals_config
+    end,
+    config = function(self, metals_config)
+      local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = self.ft,
+        callback = function()
+          require("metals").initialize_or_attach(metals_config)
+        end,
+        group = nvim_metals_group,
+      })
+    end
+  },
+  {
+    "robitx/gp.nvim",
+    config = function ()
+      local conf = {
+        openai_api_key = os.getenv("OPENAI_API_KEY"),
+        providers = {
+          openai = {
+            -- endpoint = "https://api.deepseek.com/v1",
+            -- model = "deepseek-chat",
+            -- ds official
+            -- endpoint = "https://api.deepseek.com/v1",
+            -- model = "deepseek-chat",
+            --
+            -- SiliconFlow
+            endpoint = "https://api.siliconflow.com/v1/chat/completions",
+            model = "deepseek-ai/DeepSeek-R1-Distill-Llama-70B"
+--deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+          }
+        },
+        agents = {
+          {
+            provider = "openai",
+            name = "ChatGPT4o",
+            chat = true,
+            model = { model = "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B", temperature=0.6, top_p=0.7, top_k=50, max_tokens=8192 },
+            system_prompt = require("gp.defaults").chat_system_prompt,
+          }
+        }
+      }
+      require("gp").setup(conf)
+    end,
+  }
 }
