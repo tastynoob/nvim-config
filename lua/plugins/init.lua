@@ -142,9 +142,9 @@ return {
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
 			local fzf_lua = require("fzf-lua")
+      fzf_bin = 'sk'
 			local builtin_previewer = require("fzf-lua.previewer.builtin")
 			local global_previewer = builtin_previewer.buffer_or_file:extend()
-
 			local function split(str, reps)
 				local resultStrList = {}
 				string.gsub(str, "[^" .. reps .. "]+", function(w)
