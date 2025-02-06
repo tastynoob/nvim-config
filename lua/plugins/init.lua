@@ -358,6 +358,12 @@ return {
         show_help = "<f1>",
       }
     }
-  }
-
+  },
+  {
+    'MagicDuck/grug-far.nvim',
+    config = function ()
+      require("grug-far").setup({
+      });
+    end
+  },
 }
