@@ -44,6 +44,7 @@ require('mason-lspconfig').setup({
 })
 
 local cmp = require('cmp')
+local cmp_dict = require("cmp_dictionary")
 local cmp_action = require('lsp-zero').cmp_action()
 local cmp_select = {behavior = cmp.SelectBehavior.Select}
 
@@ -51,10 +52,11 @@ require('luasnip.loaders.from_vscode').lazy_load()
 
 cmp.setup({
   sources = {
-    {name = 'path'},
     {name = 'nvim_lsp'},
     {name = 'nvim_lua'},
     {name = 'luasnip', keyword_length = 2},
+    {name = 'dictionary', keyword_length = 2},
+    {name = 'path'},
     {name = 'buffer', keyword_length = 3},
   },
   formatting = lsp_zero.cmp_format(),
@@ -67,3 +69,7 @@ cmp.setup({
   })
 })
 
+cmp_dict.setup({
+  paths = {"/usr/share/dict/words"},
+  first_case_insensitive = true,
+})

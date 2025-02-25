@@ -28,7 +28,7 @@ return {
         dim_inactive = false,
         transparent_mode = false,
       })
-      vim.o.background = "dark"
+      vim.o.background = "light"
       vim.cmd("colorscheme gruvbox")
     end,
   },
@@ -125,6 +125,7 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
+      "uga-rosa/cmp-dictionary",
       "saadparwaiz1/cmp_luasnip",
       "hrsh7th/cmp-nvim-lua",
       "rafamadriz/friendly-snippets",
@@ -135,6 +136,12 @@ return {
     config = function()
       require("plugins.lsp-zero")
     end,
+  },
+  {
+    "smjonas/inc-rename.nvim",
+    config = function()
+      require("inc_rename").setup()
+    end
   },
   {
     "ibhagwan/fzf-lua",
