@@ -308,8 +308,10 @@ return {
             -- model = "deepseek-chat",
             --
             -- SiliconFlow
-            endpoint = "https://api.siliconflow.com/v1/chat/completions",
-            model = "deepseek-ai/DeepSeek-R1-Distill-Llama-70B"
+            -- endpoint = "https://api.siliconflow.com/v1/chat/completions",
+            -- model = "deepseek-ai/DeepSeek-R1-Distill-Llama-70B"
+            endpoint = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+--            model = "deepseek-r1"
             --deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
           }
         },
@@ -318,7 +320,8 @@ return {
             provider = "openai",
             name = "ChatGPT4o",
             chat = true,
-            model = { model = "deepseek-ai/DeepSeek-R1", temperature=0.6, top_p=0.7, top_k=50, max_tokens=8192 },
+--            model = { model = "deepseek-ai/DeepSeek-R1", temperature=0.6, top_p=0.7, top_k=50, max_tokens=8192 },
+            model = { model = "deepseek-r1" },
             system_prompt = require("gp.defaults").chat_system_prompt,
           }
         }
@@ -333,7 +336,7 @@ return {
     opts = {
       open_for_directories = false,
       keymaps = {
-        show_help = "<f1>",
+        show_help = "<f2>",
       }
     }
   },
