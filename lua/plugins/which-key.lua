@@ -32,8 +32,8 @@ require("which-key").add({
     --- }}}
 
     --- fzf-lua {{{
-    {"gd", "<cmd>lua require('fzf-lua').lsp_definitions({jump_to_single_result=true})<CR>", desc = "Goto declaration"},
-    {"gr", "<cmd>lua require('fzf-lua').lsp_references({jump_to_single_result=true})<CR>", desc = "Goto declaration"},
+    {"gd", "<cmd>lua require('fzf-lua').lsp_definitions({jump1=true})<CR>", desc = "Goto declaration"},
+    {"gr", "<cmd>lua require('fzf-lua').lsp_references({jump1=true})<CR>", desc = "Goto declaration"},
     {"<leader>p", "<cmd>FzfLua oldfiles<CR>", desc = "Show recent files"},
     {"<leader>O", "<cmd>FzfLua git_files<CR>", desc = "Search for a file in project"},
     {"<leader>o", "<cmd>FzfLua files<CR>", desc = "Search for a file (ignoring git-ignore)"},

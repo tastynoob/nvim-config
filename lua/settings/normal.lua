@@ -1,7 +1,5 @@
 require("helpers/global-helpers")
 
-
-
 opt.expandtab = true
 opt.shiftwidth = 2
 opt.tabstop = 2
@@ -67,4 +65,11 @@ vim.opt.clipboard = "unnamedplus" -- Use system clipboard
 vim.opt.fixeol = false -- Turn off appending new line in the end of a file
 -- }}}
 
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  pattern = "*.td",
+  callback = function()
+    vim.bo.filetype = "tablegen"
+  end,
+})
 
+vim.o.signcolumn = "yes"

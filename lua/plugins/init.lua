@@ -1,5 +1,44 @@
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  if col == 0 then
+    return false
+  end
+
+  local text = vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]
+  return text:sub(col, col):match("%s") == nil
+end
+
 return {
-	-- color scheme
+  {
+    "neovim/nvim-lspconfig",
+    config = function()
+      vim.lsp.config("clangd", {
+        on_attach = function()
+          print("clangd server now running")
+        end
+      })
+      vim.lsp.config("mlir", {
+        on_attach = function()
+          print("mlir server now running")
+        end
+      })
+      vim.lsp.config("mlir_pdll", {
+        on_attach = function()
+          print("mlir_pdll server now running")
+        end
+      })
+      vim.lsp.config("tblgen", {
+        on_attach = function()
+          print("tblgen server now running")
+        end
+      })
+      vim.lsp.enable('clangd')
+      vim.lsp.enable('mlir_lsp_server')
+      vim.lsp.enable('mlir_pdll_lsp_server')
+      vim.lsp.enable('tblgen_lsp_server')
+      vim.lsp.enable('pyright')
+    end
+  },
   {
     "ellisonleao/gruvbox.nvim",
     priority = 1000,
@@ -28,7 +67,7 @@ return {
         dim_inactive = false,
         transparent_mode = false,
       })
-      vim.o.background = "light"
+      vim.o.background = "dark"
       vim.cmd("colorscheme gruvbox")
     end,
   },
@@ -110,32 +149,50 @@ return {
     end,
   },
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     build = ":MasonUpdate",
     dependencies = {
-      "williamboman/mason-lspconfig.nvim",
       "neovim/nvim-lspconfig",
     },
+    config = function()
+      require('mason').setup({})
+    end
   },
   {
-    "VonHeikemen/lsp-zero.nvim",
+    "Saghen/blink.cmp",
     dependencies = {
-      "neovim/nvim-lspconfig",
-      "hrsh7th/nvim-cmp",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "uga-rosa/cmp-dictionary",
-      "saadparwaiz1/cmp_luasnip",
-      "hrsh7th/cmp-nvim-lua",
       "rafamadriz/friendly-snippets",
-      "L3MON4D3/LuaSnip",
-      "folke/neoconf.nvim",
+      "L3MON4D3/LuaSnip"
     },
-    branch = "v3.x",
-    config = function()
-      require("plugins.lsp-zero")
-    end,
+    build = 'cargo build --release',
+    opts = {
+      keymap = {
+        preset = 'super-tab',
+      },
+      appearance = {
+        nerd_font_variant = 'mono'
+      },
+      completion = {documentation = { auto_show = false }},
+      sources = {
+--        default = { 'lsp', 'path', 'snippets', 'buffer' },
+        default = { 'lsp', 'snippets', 'path', 'buffer' },
+      },
+      fuzzy = {
+        implementation = "prefer_rust_with_warning",
+        max_typos = function(keyword) return math.floor(#keyword / 4) end,
+        sorts = {
+          'exact',
+        }
+      },
+      snippets = {
+        preset = 'luasnip'
+      },
+      cmdline = {
+        keymap = { preset = 'inherit'},
+        completion = { menu = { auto_show = true } },
+      },
+    },
+    opts_extend = { "sources.default" }
   },
   {
     "smjonas/inc-rename.nvim",
@@ -242,9 +299,6 @@ return {
     dependencies = {
       "tpope/vim-repeat",
     },
-    config = function()
-      require("leap").add_default_mappings()
-    end,
   },
 
   {
@@ -276,66 +330,31 @@ return {
       require("inc_rename").setup()
     end,
   },
-  {
-    "scalameta/nvim-metals",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-    ft = { "scala", "sbt", "java" },
-    opts = function()
-      local metals_config = require("metals").bare_config()
-        metals_config.on_attach = function(client, bufnr)
-        -- your on_attach function
-      end
-
-      return metals_config
-    end,
-    config = function(self, metals_config)
-      local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = self.ft,
-        callback = function()
-          require("metals").initialize_or_attach(metals_config)
-        end,
-        group = nvim_metals_group,
-      })
-    end
-  },
-  {
-    "robitx/gp.nvim",
-    config = function ()
-      local conf = {
-        openai_api_key = os.getenv("OPENAI_API_KEY"),
-        providers = {
-          openai = {
-            -- endpoint = "https://api.deepseek.com/v1",
-            -- model = "deepseek-chat",
-            -- ds official
-            -- endpoint = "https://api.deepseek.com/v1",
-            -- model = "deepseek-chat",
-            --
-            -- SiliconFlow
-            -- endpoint = "https://api.siliconflow.com/v1/chat/completions",
-            -- model = "deepseek-ai/DeepSeek-R1-Distill-Llama-70B"
-            endpoint = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
---            model = "deepseek-r1"
-            --deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
-          }
-        },
-        agents = {
-          {
-            provider = "openai",
-            name = "ChatGPT4o",
-            chat = true,
---            model = { model = "deepseek-ai/DeepSeek-R1", temperature=0.6, top_p=0.7, top_k=50, max_tokens=8192 },
-            model = { model = "deepseek-r1" },
-            system_prompt = require("gp.defaults").chat_system_prompt,
-          }
-        }
-      }
-      require("gp").setup(conf)
-    end,
-  },
+--  {
+--    "scalameta/nvim-metals",
+--    dependencies = {
+--      "nvim-lua/plenary.nvim",
+--    },
+--    ft = { "scala", "sbt", "java" },
+--    opts = function()
+--      local metals_config = require("metals").bare_config()
+--        metals_config.on_attach = function(client, bufnr)
+--        -- your on_attach function
+--      end
+--
+--      return metals_config
+--    end,
+--    config = function(self, metals_config)
+--      local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
+--      vim.api.nvim_create_autocmd("FileType", {
+--        pattern = self.ft,
+--        callback = function()
+--          require("metals").initialize_or_attach(metals_config)
+--        end,
+--        group = nvim_metals_group,
+--      })
+--    end
+--  },
   {
     "mikavilpas/yazi.nvim",
     event = "VeryLazy",
