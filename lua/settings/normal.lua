@@ -1,9 +1,27 @@
-require("helpers/global-helpers")
+local opt, o, g = vim.opt, vim.o, vim.g
 
 opt.expandtab = true
 opt.shiftwidth = 2
 opt.tabstop = 2
 opt.smartindent = true
+
+-- 缩进的 filetype 例外：Python 4 空格，Makefile 必须真 tab
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "python" },
+  callback = function()
+    vim.bo.shiftwidth = 4
+    vim.bo.tabstop = 4
+  end,
+})
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "make" },
+  callback = function()
+    vim.bo.expandtab = false
+  end,
+})
+
+opt.undofile = true        -- 持久化撤销历史
+opt.termguicolors = true   -- 真彩色（gruvbox 等主题需要）
 
 opt.ignorecase = true
 opt.joinspaces = false
@@ -56,14 +74,34 @@ o.encoding = "utf-8"
 --o.termencoding="utf-8"
 --}}}
 
-opt.spell = true
+-- 拼写检查只对文本类文件开启，代码里太吵
+opt.spell = false
 opt.spelllang = { "en_us" }
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "gitcommit", "text", "typst" },
+  callback = function()
+    vim.opt_local.spell = true
+  end,
+})
 opt.scrolloff = 8
 
 -- Clipboard {{{
 vim.opt.clipboard = "unnamedplus" -- Use system clipboard
-vim.opt.fixeol = false -- Turn off appending new line in the end of a file
+vim.opt.fixeol = true            -- 保留文件末尾换行（POSIX 文本文件约定）
 -- }}}
+
+-- 格式化策略：j 合并注释行、q 允许 gq 排版注释；不含 o/r，o/O 不自动续注释
+opt.formatoptions = "tcqj"
+
+-- 诊断显示策略：virtual_text 只显示 WARN+，INFO/HINT 进 float/signs，避免刷屏
+vim.diagnostic.config({
+  virtual_text = { severity = { min = vim.diagnostic.severity.WARN } },
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+  float = { border = "rounded", source = true },
+})
 
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
   pattern = "*.td",

@@ -6,8 +6,14 @@ require("which-key").add({
     desc = "Open yazi at the current file",
   },
   {
+    "<leader>F",
+    mode = {"n", "v"},
+    ":Neoformat<cr>",
+    desc = "Format buffer / selection",
+  },
+  {
     "<leader>cw",
-    "<cmd>Yazi<cr>",
+    "<cmd>Yazi cwd<cr>",
     desc = "Open the file manager in nvim's working directory",
   },
   {
@@ -32,8 +38,8 @@ require("which-key").add({
     --- }}}
 
     --- fzf-lua {{{
-    {"gd", "<cmd>lua require('fzf-lua').lsp_definitions({jump1=true})<CR>", desc = "Goto declaration"},
-    {"gr", "<cmd>lua require('fzf-lua').lsp_references({jump1=true})<CR>", desc = "Goto declaration"},
+    {"gd", "<cmd>FzfLua lsp_definitions jump1=true<CR>", desc = "Goto definition"},
+    {"gr", "<cmd>FzfLua lsp_references jump1=true<CR>", desc = "Goto references"},
     {"<leader>p", "<cmd>FzfLua oldfiles<CR>", desc = "Show recent files"},
     {"<leader>O", "<cmd>FzfLua git_files<CR>", desc = "Search for a file in project"},
     {"<leader>o", "<cmd>FzfLua files<CR>", desc = "Search for a file (ignoring git-ignore)"},
@@ -45,16 +51,16 @@ require("which-key").add({
     --- }}}
 
     -- leader tabe{{{
-    {"<leader>1", "<esc>1gt<cr>", desc = "tab 1"},
-    {"<leader>2", "<esc>2gt<cr>", desc = "tab 2"},
-    {"<leader>3", "<esc>3gt<cr>", desc = "tab 3"},
-    {"<leader>4", "<esc>4gt<cr>", desc = "tab 4"},
-    {"<leader>5", "<esc>5gt<cr>", desc = "tab 5"},
-    {"<leader>6", "<esc>6gt<cr>", desc = "tab 6"},
-    {"<leader>7", "<esc>7gt<cr>", desc = "tab 7"},
-    {"<leader>8", "<esc>8gt<cr>", desc = "tab 8"},
-    {"<leader>9", "<esc>9gt<cr>", desc = "tab 9"},
-    {"<leader>0", "<esc>10gt<cr>", desc = "tab 11"}
+    {"<leader>1", "<esc>1gt", desc = "tab 1"},
+    {"<leader>2", "<esc>2gt", desc = "tab 2"},
+    {"<leader>3", "<esc>3gt", desc = "tab 3"},
+    {"<leader>4", "<esc>4gt", desc = "tab 4"},
+    {"<leader>5", "<esc>5gt", desc = "tab 5"},
+    {"<leader>6", "<esc>6gt", desc = "tab 6"},
+    {"<leader>7", "<esc>7gt", desc = "tab 7"},
+    {"<leader>8", "<esc>8gt", desc = "tab 8"},
+    {"<leader>9", "<esc>9gt", desc = "tab 9"},
+    {"<leader>0", "<esc>10gt", desc = "tab 10"}
     --}}}
   },
   {
