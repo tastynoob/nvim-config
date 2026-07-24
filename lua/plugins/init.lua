@@ -3,7 +3,7 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     -- blink 必须在 LSP 客户端启动前加载，capabilities 才能注入首次协商
-    dependencies = { "Saghen/blink.cmp" },
+    dependencies = { "Saghen/blink.cmp", "mason-org/mason.nvim" },
     config = function()
       vim.lsp.config("*", {
         capabilities = require("blink.cmp").get_lsp_capabilities(),
@@ -13,10 +13,16 @@ return {
           print("clangd server now running")
         end
       })
+      local function enable_if_executable(server, executable)
+        if vim.fn.executable(executable) == 1 then
+          vim.lsp.enable(server)
+        end
+      end
+
       vim.lsp.enable('clangd')
-      vim.lsp.enable('mlir_lsp_server')
-      vim.lsp.enable('mlir_pdll_lsp_server')
-      vim.lsp.enable('tblgen_lsp_server')
+      enable_if_executable('mlir_lsp_server', 'mlir-lsp-server')
+      enable_if_executable('mlir_pdll_lsp_server', 'mlir-pdll-lsp-server')
+      enable_if_executable('tblgen_lsp_server', 'tblgen-lsp-server')
 --      vim.lsp.enable('pyrefly')
       vim.lsp.enable('ty')
       vim.lsp.enable('lua_ls')
@@ -126,14 +132,11 @@ return {
     build = ":MasonUpdate",
     event = { "BufReadPre", "BufNewFile" },
     cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUninstallAll", "MasonUpdate", "MasonLog" },
-    dependencies = {
-      "neovim/nvim-lspconfig",
-    },
     config = function()
       require('mason').setup({})
       -- ensure_installed 的极简实现：缺什么装什么，不引入额外插件
       local registry = require('mason-registry')
-      for _, name in ipairs({ 'lua-language-server', 'clangd', 'stylua' }) do
+      for _, name in ipairs({ 'lua-language-server', 'clangd', 'stylua', 'ty' }) do
         local ok, pkg = pcall(registry.get_package, name)
         if ok and not pkg:is_installed() then
           pkg:install()
@@ -143,20 +146,23 @@ return {
   },
   {
     "Saghen/blink.cmp",
-    branch = 'v1',
+    version = "1.*",
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
       "rafamadriz/friendly-snippets",
     },
-    build = 'cargo build --release',
     opts = {
       keymap = {
         preset = 'super-tab',
       },
-      appearance = {
-        nerd_font_variant = 'mono'
+      completion = {
+        documentation = { auto_show = false },
+        menu = {
+          draw = {
+            columns = { { "label", "label_description", gap = 1 }, { "kind" } },
+          },
+        },
       },
-      completion = {documentation = { auto_show = false }},
       sources = {
 --        default = { 'lsp', 'path', 'snippets', 'buffer' },
         default = { 'lsp', 'snippets', 'path', 'buffer' },
@@ -190,12 +196,19 @@ return {
   },
   {
     "ibhagwan/fzf-lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    cmd = {
-      "FzfLua",
-      "GlobalTags", "GlobalTagsInFilename", "GlobalGrep",
-      "GlobalReference", "GlobalDefinition", "GlobalUpdate",
-    },
+    cond = function()
+      return vim.fn.executable("sk") == 1 or vim.fn.executable("fzf") == 1
+    end,
+    cmd = function()
+      local cmds = { "FzfLua" }
+      if vim.fn.executable("global") == 1 then
+        vim.list_extend(cmds, {
+          "GlobalTags", "GlobalTagsInFilename", "GlobalGrep",
+          "GlobalReference", "GlobalDefinition", "GlobalUpdate",
+        })
+      end
+      return cmds
+    end,
     config = function()
       local fzf_lua = require("fzf-lua")
       local builtin_previewer = require("fzf-lua.previewer.builtin")
@@ -278,20 +291,29 @@ return {
         })
       end
 
-      create_user_command("GlobalTagsInFilename", "-x -P", 1)
-      -- not support search tags in files
-      -- create_user_command("GlobalTagsInFiles", "-x -f", 1)
-      create_user_command("GlobalTags", "-x", 1)
-      create_user_command("GlobalGrep", "-x -E", 1)
-      create_user_command("GlobalReference", "-x -r", 1)
-      create_user_command("GlobalDefinition", "-x -d", 1)
+      if vim.fn.executable("global") == 1 then
+        create_user_command("GlobalTagsInFilename", "-x -P", 1)
+        -- not support search tags in files
+        -- create_user_command("GlobalTagsInFiles", "-x -f", 1)
+        create_user_command("GlobalTags", "-x", 1)
+        create_user_command("GlobalGrep", "-x -E", 1)
+        create_user_command("GlobalReference", "-x -r", 1)
+        create_user_command("GlobalDefinition", "-x -d", 1)
 
-      vim.api.nvim_create_user_command("GlobalUpdate", function()
-        global_update()
-      end, { nargs = 0 })
+        vim.api.nvim_create_user_command("GlobalUpdate", function()
+          global_update()
+        end, { nargs = 0 })
+      end
 
       -- calling `setup` is optional for customization
-      require("fzf-lua").setup({ fzf_bin = "sk" })
+      local fzf_bin = vim.fn.executable("sk") == 1 and "sk" or "fzf"
+      require("fzf-lua").setup({
+        fzf_bin = fzf_bin,
+        defaults = {
+          file_icons = false,
+          git_icons = false,
+        },
+      })
     end,
   },
   -- Neoformat
@@ -307,6 +329,9 @@ return {
   -- set keybinding in tmux and nvim
   {
     "aserowy/tmux.nvim",
+    cond = function()
+      return vim.fn.executable("tmux") == 1 and vim.env.TMUX ~= nil
+    end,
     keys = { "<C-h>", "<C-j>", "<C-k>", "<C-l>" },
     config = function()
       return require("tmux").setup({
@@ -319,11 +344,78 @@ return {
     -- 需要接管目录 buffer（nvim .），官方不推荐懒加载；netrw 已在 settings 中禁用
     lazy = false,
     config = function()
-      require("oil").setup({})
+      require("oil").setup({ columns = {} })
       vim.keymap.set("n", "-", function() require("oil").open() end, { desc = "Open parent directory (oil)" })
     end,
-    -- Optional dependencies
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+  },
+  {
+    "nvim-tree/nvim-tree.lua",
+    cmd = {
+      "NvimTreeToggle", "NvimTreeOpen", "NvimTreeClose",
+      "NvimTreeFocus", "NvimTreeFindFile", "NvimTreeRefresh",
+    },
+    opts = {
+      disable_netrw = true,
+      hijack_netrw = true,
+      view = {
+        side = "left",
+        width = 32,
+      },
+      renderer = {
+        add_trailing = true,
+        group_empty = true,
+        indent_markers = {
+          enable = true,
+        },
+        icons = {
+          web_devicons = {
+            file = {
+              enable = false,
+              color = false,
+            },
+            folder = {
+              enable = false,
+              color = false,
+            },
+          },
+          padding = {
+            icon = " ",
+            folder_arrow = " ",
+          },
+          glyphs = {
+            default = "F",
+            symlink = "L",
+            modified = "M",
+            folder = {
+              arrow_closed = ">",
+              arrow_open = "v",
+              default = "D",
+              open = "O",
+              empty = "E",
+              empty_open = "e",
+              symlink = "L",
+              symlink_open = "l",
+            },
+          },
+          show = {
+            file = true,
+            folder = true,
+            folder_arrow = true,
+            git = false,
+            modified = true,
+            diagnostics = false,
+            bookmarks = false,
+          },
+        },
+      },
+      update_focused_file = {
+        enable = true,
+        update_root = false,
+      },
+      filters = {
+        dotfiles = false,
+      },
+    },
   },
   {
     url = "https://codeberg.org/andyg/leap.nvim",
@@ -346,7 +438,43 @@ return {
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
-    config = function ()
+    opts = {
+      icons = {
+        mappings = false,
+        keys = {
+          Up = "Up ",
+          Down = "Down ",
+          Left = "Left ",
+          Right = "Right ",
+          C = "C-",
+          M = "M-",
+          D = "D-",
+          S = "S-",
+          CR = "Enter ",
+          Esc = "Esc ",
+          ScrollWheelDown = "ScrollDown ",
+          ScrollWheelUp = "ScrollUp ",
+          NL = "Enter ",
+          BS = "BS ",
+          Space = "Space ",
+          Tab = "Tab ",
+          F1 = "F1 ",
+          F2 = "F2 ",
+          F3 = "F3 ",
+          F4 = "F4 ",
+          F5 = "F5 ",
+          F6 = "F6 ",
+          F7 = "F7 ",
+          F8 = "F8 ",
+          F9 = "F9 ",
+          F10 = "F10 ",
+          F11 = "F11 ",
+          F12 = "F12 ",
+        },
+      },
+    },
+    config = function(_, opts)
+      require("which-key").setup(opts)
       require("plugins.which-key")
     end
   },
@@ -359,6 +487,9 @@ return {
   },
   {
     "t-troebst/perfanno.nvim",
+    cond = function()
+      return vim.fn.executable("perf") == 1
+    end,
     cmd = {
       "PerfLoadFlat", "PerfLoadCallGraph", "PerfLoadFlameGraph",
       "PerfAnnotate", "PerfAnnotateFunction", "PerfAnnotateSelection",
@@ -396,17 +527,6 @@ return {
 --      })
 --    end
 --  },
-  {
-    "mikavilpas/yazi.nvim",
-    cmd = { "Yazi" },
-    -- @type YaziConfig
-    opts = {
-      open_for_directories = false,
-      keymaps = {
-        show_help = "<f2>",
-      }
-    }
-  },
   {
     'MagicDuck/grug-far.nvim',
     cmd = { "GrugFar", "GrugFarWithin" },
