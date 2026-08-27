@@ -4,7 +4,7 @@
 
 ## 插件管理
 
-`lazy.nvim` 在首次启动时自动安装到 Neovim 数据目录。插件配置由 `lua/config/lazy.lua` 导入 `lua/plugins/init.lua`。
+`lazy.nvim` 在首次启动时自动安装到 Neovim 数据目录。插件配置由 `lua/config/lazy.lua` 导入 `lua/plugins/init.lua`，再由 `lua/plugins/init.lua` 按模块导入各个插件配置文件。
 
 插件更新检查关闭：
 
@@ -16,11 +16,15 @@ checker = { enabled = false }
 
 部分插件依赖外部命令。外部命令不存在时，相关插件不会启用；基础编辑功能继续可用。
 
+## 配置拆分
+
+`lua/plugins/init.lua` 只维护插件模块导入顺序。插件声明、选项、条件加载与插件命令按插件或相关插件组拆分到 `lua/plugins/*.lua`。快捷键注册独立维护在 `lua/keymaps/which-key.lua`。
+
 ## 运行依赖
 
 外部程序清单见 [README](../README.md#需要自行安装的外部工具)。
 
-`mason.nvim` 会检查并安装 `lua-language-server`、`clangd`、`stylua`、`ty`。MLIR、PDLL 与 TableGen 相关语言服务器需要由运行环境提供。
+`mason.nvim` 会检查并安装 `lua-language-server`、`clangd`、`stylua`。存在 `npm` 时，`mason.nvim` 还会安装 `pyright`。MLIR、PDLL 与 TableGen 相关语言服务器需要由运行环境提供。
 
 ## 插件清单
 
@@ -34,7 +38,7 @@ checker = { enabled = false }
 | `nvim-treesitter/nvim-treesitter` | 启动阶段 | Tree-sitter 解析器安装与高亮启用。 |
 | `mason-org/mason.nvim` | 文件读取、新文件、Mason 命令 | 外部工具与语言服务器安装管理。 |
 | `ibhagwan/fzf-lua` | 存在 `fzf` 或 `sk` 时启用 | 文件、缓冲区、LSP、文本检索界面。 |
-| `sbdchd/neoformat` | `Neoformat` 命令 | 格式化命令，Lua 格式化优先使用 `stylua`。 |
+| `sbdchd/neoformat` | `Neoformat` 命令 | 格式化命令，Lua 格式化使用 `stylua`，Python 格式化使用 `black`。 |
 | `aserowy/tmux.nvim` | 位于 tmux 会话且存在 `tmux` 时启用 | Neovim 窗口与 tmux pane 方向导航。 |
 | `stevearc/oil.nvim` | 启动阶段 | 目录编辑器，接管目录 buffer。 |
 | `nvim-tree/nvim-tree.lua` | NvimTree 命令 | 左侧文件树侧边栏，不依赖外部文件管理器。 |
@@ -59,10 +63,10 @@ checker = { enabled = false }
 | `mlir_lsp_server` | MLIR LSP；存在 `mlir-lsp-server` 时启用。 |
 | `mlir_pdll_lsp_server` | MLIR PDLL LSP；存在 `mlir-pdll-lsp-server` 时启用。 |
 | `tblgen_lsp_server` | LLVM TableGen LSP；存在 `tblgen-lsp-server` 时启用。 |
-| `ty` | Python 类型检查相关 LSP，由 Mason 安装。 |
+| `pyright` | Python LSP；由 Mason 通过 npm 安装，存在 `pyright-langserver` 时启用。 |
 | `lua_ls` | Lua LSP。 |
 
-`pyrefly` 配置保留为注释，当前未启用。
+Python 补全、跳转与类型诊断由 `pyright` 提供。Python 格式化由 `Neoformat` 调用 `black` 提供。
 
 ## Tree-sitter
 

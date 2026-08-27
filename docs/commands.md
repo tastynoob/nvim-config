@@ -9,7 +9,7 @@
 | 命令 | 来源 | 作用 |
 | --- | --- | --- |
 | `:Mason`、`:MasonInstall`、`:MasonUpdate` 等 | `mason.nvim` | 管理外部工具与语言服务器。 |
-| `:Neoformat` | `neoformat` | 格式化当前缓冲区或选区。 |
+| `:Neoformat` | `neoformat` | 格式化当前缓冲区或选区；Python 文件使用 `black`。 |
 | `:FzfLua` | `fzf-lua` | 打开 fzf-lua 功能选择器；需要 `fzf` 或 `sk`。 |
 | `:NvimTreeToggle`、`:NvimTreeFindFile`、`:NvimTreeFocus` 等 | `nvim-tree.lua` | 打开、定位和聚焦左侧文件树。 |
 | `:GrugFar`、`:GrugFarWithin` | `grug-far.nvim` | 搜索与替换。 |

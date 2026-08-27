@@ -7,7 +7,7 @@
 | 类别 | 行为 |
 | --- | --- |
 | 缩进 | 默认使用空格缩进，`shiftwidth=2`，`tabstop=2`，启用 `smartindent`。 |
-| Python | Python 文件使用 4 空格缩进。 |
+| Python | Python 文件使用 4 空格缩进；补全、跳转与类型诊断由 `pyright` 提供，格式化由 `black` 提供。 |
 | Makefile | `make` 文件类型使用真实 tab。 |
 | 撤销 | 启用持久化撤销历史。 |
 | 编码 | 文件编码与编辑器编码设置为 UTF-8。 |
