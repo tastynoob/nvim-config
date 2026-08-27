@@ -12,6 +12,9 @@ return {
         ["<Esc>"] = { "cancel", "fallback" },
       },
       completion = {
+        trigger = {
+          show_on_blocked_trigger_characters = { " ", "\n", "\t", "[", "]" },
+        },
         documentation = { auto_show = false },
         menu = {
           draw = {

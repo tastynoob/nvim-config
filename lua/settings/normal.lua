@@ -26,7 +26,7 @@ opt.termguicolors = true   -- 真彩色（gruvbox 等主题需要）
 opt.ignorecase = true
 opt.joinspaces = false
 opt.smartcase = true
-opt.showmatch = true
+opt.showmatch = false
 
 opt.splitbelow = true
 opt.splitright = true
