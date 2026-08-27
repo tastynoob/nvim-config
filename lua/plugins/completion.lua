@@ -9,6 +9,7 @@ return {
     opts = {
       keymap = {
         preset = "super-tab",
+        ["<Esc>"] = { "cancel", "fallback" },
       },
       completion = {
         documentation = { auto_show = false },
