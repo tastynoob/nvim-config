@@ -2,6 +2,9 @@ return {
   {
     "akinsho/toggleterm.nvim",
     version = "*",
+    init = function()
+      vim.keymap.set("t", "<Esc><Esc>", [[<C-\><C-n>]], { silent = true, desc = "Exit terminal mode" })
+    end,
     cmd = { "ToggleTerm", "TermExec" },
     keys = {
       { "<C-\\>", "<cmd>ToggleTerm<CR>", desc = "Toggle terminal panel" },

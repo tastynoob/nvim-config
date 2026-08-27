@@ -3,7 +3,9 @@ local opt, o, g = vim.opt, vim.o, vim.g
 opt.expandtab = true
 opt.shiftwidth = 2
 opt.tabstop = 2
-opt.smartindent = true
+opt.autoindent = true
+opt.smartindent = false
+vim.cmd("filetype plugin indent on")
 
 -- 缩进的 filetype 例外：Python 4 空格，Makefile 必须真 tab
 vim.api.nvim_create_autocmd("FileType", {

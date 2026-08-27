@@ -64,7 +64,7 @@ checker = { enabled = false }
 | `mlir_lsp_server` | MLIR LSP；存在 `mlir-lsp-server` 时启用。 |
 | `mlir_pdll_lsp_server` | MLIR PDLL LSP；存在 `mlir-pdll-lsp-server` 时启用。 |
 | `tblgen_lsp_server` | LLVM TableGen LSP；存在 `tblgen-lsp-server` 时启用。 |
-| `pyright` | Python LSP；由 Mason 通过 npm 安装，存在 `pyright-langserver` 时启用。 |
+| `pyright` | Python LSP；由 Mason 通过 npm 安装，存在 `pyright-langserver` 时启用，类型检查级别为 `basic`。 |
 | `lua_ls` | Lua LSP。 |
 
 Python 补全、跳转与类型诊断由 `pyright` 提供。Python 格式化由 `Neoformat` 调用 `black` 提供。

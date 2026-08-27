@@ -13,6 +13,15 @@ return {
           print("clangd server now running")
         end,
       })
+      vim.lsp.config("pyright", {
+        settings = {
+          python = {
+            analysis = {
+              typeCheckingMode = "basic",
+            },
+          },
+        },
+      })
 
       local function enable_if_executable(server, executable)
         if vim.fn.executable(executable) == 1 then
