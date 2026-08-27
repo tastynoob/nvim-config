@@ -12,6 +12,7 @@
 | `:Neoformat` | `neoformat` | 格式化当前缓冲区或选区；Python 文件使用 `black`。 |
 | `:FzfLua` | `fzf-lua` | 打开 fzf-lua 功能选择器；需要 `fzf` 或 `sk`。 |
 | `:NvimTreeToggle`、`:NvimTreeFindFile`、`:NvimTreeFocus` 等 | `nvim-tree.lua` | 打开、定位和聚焦左侧文件树。 |
+| `:ToggleTerm`、`:TermExec` | `toggleterm.nvim` | 打开、关闭终端或在终端中执行命令。 |
 | `:GrugFar`、`:GrugFarWithin` | `grug-far.nvim` | 搜索与替换。 |
 | `:DiffviewOpen`、`:DiffviewFileHistory`、`:DiffviewLog` 等 | `diffview-plus.nvim` | Git diff、历史与比较界面。 |
 | `:PerfLoadFlat`、`:PerfAnnotate`、`:PerfHottestLines` 等 | `perfanno.nvim` | 加载 perf 数据并进行性能热点标注；需要 `perf`。 |

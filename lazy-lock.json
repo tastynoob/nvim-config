@@ -18,6 +18,7 @@
   "perfanno.nvim": { "branch": "master", "commit": "7b4b876374607b139a029563ad0a27065edcaf7b" },
   "plenary.nvim": { "branch": "master", "commit": "74b06c6c75e4eeb3108ec01852001636d85a932b" },
   "tmux.nvim": { "branch": "main", "commit": "32ceaf2793582955ef9576809730878c4d2d9426" },
+  "toggleterm.nvim": { "branch": "main", "commit": "50ea089fc548917cc3cc16b46a8211833b9e3c7c" },
   "vim-repeat": { "branch": "master", "commit": "65846025c15494983dafe5e3b46c8f88ab2e9635" },
   "which-key.nvim": { "branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a" }
 }

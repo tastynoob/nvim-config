@@ -40,6 +40,7 @@ checker = { enabled = false }
 | `ibhagwan/fzf-lua` | 存在 `fzf` 或 `sk` 时启用 | 文件、缓冲区、LSP、文本检索界面。 |
 | `sbdchd/neoformat` | `Neoformat` 命令 | 格式化命令，Lua 格式化使用 `stylua`，Python 格式化使用 `black`。 |
 | `aserowy/tmux.nvim` | 位于 tmux 会话且存在 `tmux` 时启用 | Neovim 窗口与 tmux pane 方向导航。 |
+| `akinsho/toggleterm.nvim` | `ToggleTerm`、`TermExec` 命令或终端快捷键 | 底部横向终端栏，以及浮动和竖向终端。 |
 | `stevearc/oil.nvim` | 启动阶段 | 目录编辑器，接管目录 buffer。 |
 | `nvim-tree/nvim-tree.lua` | NvimTree 命令 | 左侧文件树侧边栏，不依赖外部文件管理器。 |
 | `andyg/leap.nvim` | `s`、`S`、`gs` | 快速双字符跳转。 |

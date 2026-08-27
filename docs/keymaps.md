@@ -27,6 +27,10 @@
 | `gD` | 跳转到 LSP declaration。 |
 | `<leader>e` | 打开或关闭左侧文件树。 |
 | `<leader>E` | 在左侧文件树中定位当前文件。 |
+| `<C-\>` | 打开或关闭底部终端栏。 |
+| `<leader>th` | 打开或关闭底部终端栏。 |
+| `<leader>tt` | 打开或关闭浮动终端。 |
+| `<leader>tv` | 打开或关闭竖向终端。 |
 | `gd` | 存在 `fzf` 或 `sk` 时通过 `FzfLua lsp_definitions` 跳转；缺少时使用内置 LSP definition。 |
 | `gr` | 存在 `fzf` 或 `sk` 时通过 `FzfLua lsp_references` 查看引用；缺少时使用内置 LSP references。 |
 | `<leader>p` | 打开最近文件列表；仅在存在 `fzf` 或 `sk` 时注册。 |
@@ -64,6 +68,12 @@
 | `<C-e>` | 移动到行尾；补全菜单上下文中先由 `blink.cmp` 处理取消动作。 |
 | `<C-d>` | 删除光标后字符。 |
 | `<C-_>` | 发送 `<C-k>`。 |
+
+## 终端模式
+
+| 键 | 动作 |
+| --- | --- |
+| `<Esc><Esc>` | 返回普通模式，终端保持打开。 |
 
 ## 补全预设
 

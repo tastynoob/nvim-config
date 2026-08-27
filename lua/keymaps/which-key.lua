@@ -38,6 +38,10 @@ local maps = {
     { "<leader>0", "<esc>10gt", desc = "tab 10" },
     { "<leader>e", "<cmd>NvimTreeToggle<CR>", desc = "Toggle file tree" },
     { "<leader>E", "<cmd>NvimTreeFindFile<CR>", desc = "Reveal current file in tree" },
+    { "<leader>t", group = "Terminal" },
+    { "<leader>th", "<cmd>ToggleTerm direction=horizontal<CR>", desc = "Toggle terminal panel" },
+    { "<leader>tt", "<cmd>ToggleTerm direction=float<CR>", desc = "Toggle floating terminal" },
+    { "<leader>tv", "<cmd>ToggleTerm direction=vertical<CR>", desc = "Toggle vertical terminal" },
   },
   {
     mode = { "i" },

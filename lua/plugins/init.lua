@@ -7,6 +7,7 @@ return {
   { import = "plugins.fzf" },
   { import = "plugins.format" },
   { import = "plugins.tmux" },
+  { import = "plugins.toggleterm" },
   { import = "plugins.oil" },
   { import = "plugins.nvim-tree" },
   { import = "plugins.leap" },

@@ -7,6 +7,7 @@
 - LSP、Tree-sitter、补全、格式化等代码编辑能力。
 - `fzf-lua`、GNU Global、Leap 等跳转与检索能力。
 - Oil 目录编辑入口，以及 `nvim-tree.lua` 文件树侧边栏。
+- `toggleterm.nvim` 底部终端栏，以及浮动和竖向终端入口。
 - 可选的 tmux pane 与 Neovim 窗口方向导航。
 - Git diff、搜索替换、可选的 perf 标注等辅助工具。
 
