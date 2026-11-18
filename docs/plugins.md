@@ -24,7 +24,7 @@ checker = { enabled = false }
 
 外部程序清单见 [README](../README.md#需要自行安装的外部工具)。
 
-`mason.nvim` 会检查并安装 `lua-language-server`、`clangd`、`stylua`。存在 `npm` 时，`mason.nvim` 还会安装 `pyright`。MLIR、PDLL 与 TableGen 相关语言服务器需要由运行环境提供。
+`mason.nvim` 会在启动时自动刷新 registry，并在后台补装 `lua-language-server`、`clangd`、`stylua`；存在 `npm` 时还会安装 `pyright`。MLIR、PDLL 与 TableGen 相关语言服务器需要由运行环境提供。
 
 ## 插件清单
 
@@ -35,8 +35,8 @@ checker = { enabled = false }
 | `Saghen/blink.cmp` | `InsertEnter`、`CmdlineEnter` | 补全引擎，启用 `super-tab` 键位预设，并使用 release 预编译组件。 |
 | `rafamadriz/friendly-snippets` | `blink.cmp` 依赖 | 通用代码片段来源。 |
 | `ellisonleao/gruvbox.nvim` | 高优先级启动 | 深色 `gruvbox` 主题。 |
-| `nvim-treesitter/nvim-treesitter` | 启动阶段 | Tree-sitter 解析器安装与高亮启用。 |
-| `mason-org/mason.nvim` | 文件读取、新文件、Mason 命令 | 外部工具与语言服务器安装管理。 |
+| `nvim-treesitter/nvim-treesitter` | 启动阶段 | 启用已安装解析器的高亮；解析器按需安装。 |
+| `mason-org/mason.nvim` | 启动阶段 | 自动刷新 registry，后台补装外部工具与语言服务器。 |
 | `ibhagwan/fzf-lua` | 存在 `fzf` 或 `sk` 时启用 | 文件、缓冲区、LSP、文本检索界面。 |
 | `sbdchd/neoformat` | `Neoformat` 命令 | 格式化命令，Lua 格式化使用 `stylua`，Python 格式化使用 `black`。 |
 | `aserowy/tmux.nvim` | 位于 tmux 会话且存在 `tmux` 时启用 | Neovim 窗口与 tmux pane 方向导航。 |
@@ -60,20 +60,26 @@ checker = { enabled = false }
 
 | 服务器 | 说明 |
 | --- | --- |
-| `clangd` | C/C++ LSP；连接后输出 `clangd server now running`。 |
+| `clangd` | C/C++ LSP；可执行文件存在时启用；连接后输出 `clangd server now running`。 |
 | `mlir_lsp_server` | MLIR LSP；存在 `mlir-lsp-server` 时启用。 |
 | `mlir_pdll_lsp_server` | MLIR PDLL LSP；存在 `mlir-pdll-lsp-server` 时启用。 |
 | `tblgen_lsp_server` | LLVM TableGen LSP；存在 `tblgen-lsp-server` 时启用。 |
 | `pyright` | Python LSP；由 Mason 通过 npm 安装，存在 `pyright-langserver` 时启用，类型检查级别为 `basic`。 |
-| `lua_ls` | Lua LSP。 |
+| `lua_ls` | Lua LSP；可执行文件存在时启用。 |
+
+服务器可执行文件不存在时不会启用对应 LSP，也不会阻止启动。`clangd` 与 `lua-language-server` 缺失时，会在打开文件时给出一次简短警告；Mason 安装完成后重启即可启用。
 
 Python 补全、跳转与类型诊断由 `pyright` 提供。Python 格式化由 `Neoformat` 调用 `black` 提供。
 
 ## Tree-sitter
 
-配置会安装以下解析器：
+配置不会在启动时批量安装解析器。需要某个语言的高亮时执行：
 
-`bash`、`c`、`cpp`、`json`、`lua`、`luadoc`、`luap`、`markdown`、`markdown_inline`、`mlir`、`python`、`query`、`regex`、`scala`、`tablegen`、`vim`、`vimdoc`、`yaml`。
+```vim
+:TSInstall <lang>
+```
+
+安装解析器需要外部 `tree-sitter` CLI（0.26.1+，不要使用 npm 版本）。没有安装 CLI 或没有对应解析器时，配置会跳过该语言的高亮，不影响启动。
 
 高亮按文件类型自动启用，覆盖 `sh`、`c`、`cpp`、`json`、`jsonc`、`lua`、`markdown`、`mlir`、`python`、`query`、`sbt`、`scala`、`tablegen`、`vim`、`yaml`。
 

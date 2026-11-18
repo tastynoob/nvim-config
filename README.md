@@ -23,7 +23,7 @@
 
 ## 需要自行安装的外部工具
 
-安装脚本只复制配置文件，不安装系统软件。Neovim 插件由 `lazy.nvim` 安装，`lua-language-server`、`clangd`、`stylua` 由 `mason.nvim` 在 Neovim 内安装；存在 `npm` 时，`pyright` 也由 `mason.nvim` 安装。
+安装脚本只复制配置文件，不安装系统软件。Neovim 插件由 `lazy.nvim` 安装，`lua-language-server`、`clangd`、`stylua` 由 `mason.nvim` 在 Neovim 内安装；存在 `npm` 时，`pyright` 也由 `mason.nvim` 安装。`mason.nvim` 会在启动时自动刷新 registry，并在后台补装缺失工具，不需要手动执行 `:MasonUpdate`。
 
 以下外部命令需要用户按当前系统的包管理方式自行安装。
 
@@ -34,8 +34,9 @@
 | Neovim | 必需 | 运行配置；需要支持 `vim.lsp.config` 与 `vim.lsp.enable`。 |
 | `git` | 必需 | 首次启动时拉取 `lazy.nvim`，并支持 Git 相关检索。 |
 | `curl` | 必需 | 支持 Mason 下载工具，以及 `blink.cmp` 下载预编译组件。 |
-| C 编译器 | 必需 | 构建 Tree-sitter 解析器。 |
+| C 编译器 | 按需 | 安装 Tree-sitter 解析器时需要。 |
 | `node` / `npm` | Python LSP | 支持 Mason 安装 `pyright`，用于 Python 补全、跳转与诊断。 |
+| `tree-sitter-cli` | 按需 | 安装 Tree-sitter 解析器时需要（0.26.1+，不要使用 npm 版本）。 |
 
 ### 功能工具
 
@@ -50,7 +51,7 @@
 | `black` | Python 格式化 | 为 Python 文件提供格式化。 |
 | MLIR / LLVM 工具 | MLIR / TableGen LSP | 提供 `mlir-lsp-server`、`mlir-pdll-lsp-server`、`tblgen-lsp-server`。 |
 
-`fzf`、`sk`、`global`、`tmux`、`perf`、`black` 等工具未安装时，对应功能不会启用。基础编辑、通用 LSP、补全、文件树侧边栏和主题加载不依赖这些工具。
+`fzf`、`sk`、`global`、`tmux`、`perf`、`black` 等工具未安装时，对应功能不会启用。Tree-sitter 解析器不再在启动时批量安装，需要某个语言时执行 `:TSInstall <lang>` 即可；`clangd`、`lua-language-server` 等 LSP 工具缺失时不会阻止启动，只会在打开文件时给出一次简短警告，装好后重启即可。基础编辑、通用 LSP、补全、文件树侧边栏和主题加载不依赖这些工具。
 
 ## 文档导航
 

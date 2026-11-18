@@ -8,7 +8,8 @@
 
 | 命令 | 来源 | 作用 |
 | --- | --- | --- |
-| `:Mason`、`:MasonInstall`、`:MasonUpdate` 等 | `mason.nvim` | 管理外部工具与语言服务器。 |
+| `:Mason`、`:MasonInstall`、`:MasonUpdate` 等 | `mason.nvim` | 管理外部工具与语言服务器；registry 会在启动时自动初始化。 |
+| `:TSInstall <lang>`、`:TSUpdate` | `nvim-treesitter` | 按需安装或更新 Tree-sitter 解析器；需要 `tree-sitter` CLI。 |
 | `:Neoformat` | `neoformat` | 格式化当前缓冲区或选区；Python 文件使用 `black`。 |
 | `:FzfLua` | `fzf-lua` | 打开 fzf-lua 功能选择器；需要 `fzf` 或 `sk`。 |
 | `:NvimTreeToggle`、`:NvimTreeFindFile`、`:NvimTreeFocus` 等 | `nvim-tree.lua` | 打开、定位和聚焦左侧文件树。 |

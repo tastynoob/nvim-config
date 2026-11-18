@@ -9,26 +9,11 @@ return {
       ts.setup({
         install_dir = vim.fn.stdpath("data") .. "/site",
       })
-      ts.install({
-        "bash",
-        "c",
-        "cpp",
-        "json",
-        "lua",
-        "luadoc",
-        "luap",
-        "markdown",
-        "markdown_inline",
-        "mlir",
-        "python",
-        "query",
-        "regex",
-        "scala",
-        "tablegen",
-        "vim",
-        "vimdoc",
-        "yaml",
-      })
+
+      -- 不在启动时批量安装 parser：需要某个语言的高亮时按需安装即可：
+      --   :TSInstall <lang>
+      -- 安装 parser 需要外部 tree-sitter CLI（0.26.1+），未安装时不影响启动，
+      -- Neovim 自带的 parser 仍然可以正常使用。
 
       local highlight_languages = {
         sh = "bash",
@@ -57,6 +42,7 @@ return {
             return
           end
 
+          -- parser 不存在时 language.add 返回 nil，这里直接跳过，不报错
           if vim.treesitter.language.add(language) then
             vim.treesitter.start(args.buf, language)
           end

@@ -23,18 +23,28 @@ return {
         },
       })
 
-      local function enable_if_executable(server, executable)
-        if vim.fn.executable(executable) == 1 then
-          vim.lsp.enable(server)
+      -- name: LSP 配置名；exe: 可执行文件；required: 缺失时是否提示
+      local servers = {
+        { name = "clangd", exe = "clangd", required = true },
+        { name = "lua_ls", exe = "lua-language-server", required = true },
+        { name = "pyright", exe = "pyright-langserver" },
+        { name = "mlir_lsp_server", exe = "mlir-lsp-server" },
+        { name = "mlir_pdll_lsp_server", exe = "mlir-pdll-lsp-server" },
+        { name = "tblgen_lsp_server", exe = "tblgen-lsp-server" },
+      }
+
+      local missing = {}
+      for _, server in ipairs(servers) do
+        if vim.fn.executable(server.exe) == 1 then
+          pcall(vim.lsp.enable, server.name)
+        elseif server.required then
+          missing[#missing + 1] = server.name
         end
       end
 
-      vim.lsp.enable("clangd")
-      enable_if_executable("mlir_lsp_server", "mlir-lsp-server")
-      enable_if_executable("mlir_pdll_lsp_server", "mlir-pdll-lsp-server")
-      enable_if_executable("tblgen_lsp_server", "tblgen-lsp-server")
-      enable_if_executable("pyright", "pyright-langserver")
-      vim.lsp.enable("lua_ls")
+      if #missing > 0 then
+        vim.notify("[lsp] " .. table.concat(missing, "/") .. " 缺失，装好后重启", vim.log.levels.WARN)
+      end
     end,
   },
 }
